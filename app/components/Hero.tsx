@@ -13,9 +13,9 @@ const heroUsers = [
 ];
 
 const sizeMap: Record<"sm" | "md" | "lg", string> = {
-  sm: "w-12 h-12 sm:w-14 sm:h-14",
-  md: "w-16 h-16 sm:w-20 sm:h-20",
-  lg: "w-20 h-20 sm:w-28 sm:h-28",
+  sm: "w-10 h-10 sm:w-14 sm:h-14",
+  md: "w-14 h-14 sm:w-20 sm:h-20",
+  lg: "w-16 h-16 sm:w-28 sm:h-28",
 };
 
 type Badge = {
@@ -45,7 +45,7 @@ function Pill({ b }: { b: Badge }) {
   };
   return (
     <span
-      className={`inline-flex items-center justify-center rounded-full px-5 py-2.5 text-[12.5px] sm:text-[13px] font-semibold whitespace-nowrap shadow-sm ${map[b.variant]}`}>
+      className={`inline-flex items-center justify-center rounded-full px-3.5 py-2 sm:px-5 sm:py-2.5 text-[11.5px] sm:text-[13px] font-semibold whitespace-nowrap shadow-sm ${map[b.variant]}`}>
       {b.label}
       {b.italic && <em className="italic font-semibold ml-1">{b.italic}</em>}
     </span>
@@ -54,8 +54,13 @@ function Pill({ b }: { b: Badge }) {
 
 function Sparkle() {
   return (
-    <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-[#185FA5] text-white shadow-sm flex-shrink-0">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+    <span className="inline-flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-[#185FA5] text-white shadow-sm shrink-0">
+      <svg
+        width="12"
+        height="12"
+        className="sm:w-3.5 sm:h-3.5"
+        viewBox="0 0 24 24"
+        fill="currentColor">
         <path d="M12 2 L13.5 9 L21 11 L13.5 13.5 L12 22 L10.5 13.5 L3 11 L10.5 9 Z" />
       </svg>
     </span>
@@ -185,19 +190,19 @@ export default function Hero() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5, duration: 0.6 }}
-              className="relative rounded-3xl bg-gradient-to-br from-[#FCD34D] via-[#FBBF24] to-[#F59E0B] p-6 sm:p-7 shadow-xl shadow-amber-500/15 overflow-hidden">
+              className="relative rounded-3xl bg-gradient-to-br from-[#FCD34D] via-[#FBBF24] to-[#F59E0B] p-4 sm:p-7 shadow-xl shadow-amber-500/15 overflow-hidden">
               {/* Decorative blobs */}
               <div className="absolute -right-10 top-0 w-44 h-44 rounded-full bg-[#FDE68A]/70 blur-md" />
               <div className="absolute -right-6 bottom-10 w-32 h-32 rounded-full bg-[#FEF3C7]/60 blur-md" />
               <div className="absolute right-20 bottom-2 w-20 h-20 rounded-full bg-[#FDE68A]/80 blur-sm" />
 
               <div className="relative">
-                <p className="text-[16px] sm:text-[18px] lg:text-[19px] font-extrabold text-[#0f172a] leading-snug">
+                <p className="text-[14.5px] sm:text-[18px] lg:text-[19px] font-extrabold text-[#0f172a] leading-snug">
                   50,000+ orang sudah menemukan ketenangan di RuangRasa
                 </p>
 
                 {/* Avatars row - center largest, symmetrical scale */}
-                <div className="mt-5 flex items-center justify-center gap-1.5 sm:gap-2.5">
+                <div className="mt-4 sm:mt-5 flex items-center justify-center gap-1 sm:gap-2.5">
                   {heroUsers.map((u, i) => (
                     <motion.div
                       key={i}
@@ -222,7 +227,7 @@ export default function Hero() {
                   onClick={() =>
                     window.dispatchEvent(new Event("ruangrasa:open-chat"))
                   }
-                  className="mt-5 w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#185FA5] px-6 py-3.5 text-[13.5px] font-bold text-white shadow-lg hover:bg-[#0F4478] transition-colors">
+                  className="mt-4 sm:mt-5 w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#185FA5] px-4 sm:px-6 py-3 sm:py-3.5 text-[13px] sm:text-[13.5px] font-bold text-white shadow-lg hover:bg-[#0F4478] transition-colors">
                   Coba Sekarang, Gratis
                 </motion.button>
               </div>
@@ -233,7 +238,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.6 }}
-              className="relative rounded-3xl bg-white p-5 sm:p-7 shadow-lg shadow-blue-900/5 border border-[#e2e8f0] overflow-hidden">
+              className="relative rounded-3xl bg-white p-4 sm:p-7 shadow-lg shadow-blue-900/5 border border-[#e2e8f0] overflow-hidden">
               {/* Dotted polka background */}
               <div
                 className="absolute inset-0 opacity-60"
@@ -245,13 +250,13 @@ export default function Hero() {
               />
 
               <div className="relative">
-                <p className="text-center text-[14px] sm:text-[15px] font-bold text-[#0f172a] mb-5">
+                <p className="text-center text-[13.5px] sm:text-[15px] font-bold text-[#0f172a] mb-4 sm:mb-5">
                   Yang membedakan{" "}
                   <span className="text-[#185FA5]">RuangRasa</span>
                 </p>
 
                 {/* Row 1 - scattered */}
-                <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-3">
+                <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-3 mb-2 sm:mb-3">
                   {row1.map((b, i) => (
                     <motion.div
                       key={i}
@@ -271,7 +276,7 @@ export default function Hero() {
                 </div>
 
                 {/* Row 2 - scattered */}
-                <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+                <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-3">
                   <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
