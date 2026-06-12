@@ -20,6 +20,34 @@ const SUGGESTIONS = [
 // Jumlah chat user sebelum form waitlist muncul
 const WAITLIST_TRIGGER = 5;
 
+// Auto-detect URL (https://... atau bare domain seperti pasangan.ruangrasa.co)
+const URL_RE =
+  /(https?:\/\/[^\s]+|\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:co|com|org|net|id|me|io|app)(?:\.[a-z]{2,3})?(?:\/[^\s]*)?)/gi;
+
+function linkify(text: string): React.ReactNode[] {
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  for (const match of text.matchAll(URL_RE)) {
+    const idx = match.index ?? 0;
+    if (idx > lastIndex) parts.push(text.slice(lastIndex, idx));
+    const url = match[0];
+    const href = url.startsWith("http") ? url : `https://${url}`;
+    parts.push(
+      <a
+        key={`${idx}-${url}`}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-semibold text-[#185FA5] underline underline-offset-2 hover:text-[#0F4478] break-all">
+        {url}
+      </a>
+    );
+    lastIndex = idx + url.length;
+  }
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+  return parts;
+}
+
 export default function ChatBot() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -148,8 +176,8 @@ export default function ChatBot() {
         data.error ||
         "Maaf, aku lagi nggak bisa jawab sekarang. Coba lagi nanti ya.";
 
-      // Minimum durasi loading biar chat nggak terlalu cepat (terasa natural)
-      const MIN_LOADING = 1300;
+      // Jeda 3 detik biar terasa lebih natural & exclusive (typing animation muncul)
+      const MIN_LOADING = 3000;
       const elapsed = Date.now() - start;
       if (elapsed < MIN_LOADING) {
         await new Promise((r) => setTimeout(r, MIN_LOADING - elapsed));
@@ -158,8 +186,8 @@ export default function ChatBot() {
       setMessages([...nextMessages, { role: "assistant", content: reply }]);
     } catch {
       const elapsed = Date.now() - start;
-      if (elapsed < 1300) {
-        await new Promise((r) => setTimeout(r, 1300 - elapsed));
+      if (elapsed < 3000) {
+        await new Promise((r) => setTimeout(r, 3000 - elapsed));
       }
       setMessages([
         ...nextMessages,
@@ -318,30 +346,83 @@ export default function ChatBot() {
                           ? "bg-[#185FA5] text-white rounded-2xl rounded-br-md"
                           : "bg-white text-[#0f172a] rounded-2xl rounded-tl-md border border-[#eef3fa]"
                       }`}>
-                      {m.content}
+                      {m.role === "assistant" ? linkify(m.content) : m.content}
                     </div>
                   </motion.div>
                 ))}
 
-                {/* Loading indicator */}
+                {/* Loading indicator — typing animation */}
                 {loading && (
                   <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
                     className="flex gap-2">
-                    <div className="w-8 h-8 rounded-full bg-[#EFF6FF] flex items-center justify-center shrink-0 ring-1 ring-[#dbeafe]">
+                    <motion.div
+                      animate={{ scale: [1, 1.06, 1] }}
+                      transition={{
+                        duration: 1.6,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                      className="w-8 h-8 rounded-full bg-[#EFF6FF] flex items-center justify-center shrink-0 ring-1 ring-[#dbeafe]">
                       <LogoIcon size={22} filled={false} />
-                    </div>
-                    <div className="bg-white rounded-2xl rounded-tl-md px-4 py-3 shadow-sm border border-[#eef3fa] flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#94a3b8] animate-bounce" />
-                      <span
-                        className="w-1.5 h-1.5 rounded-full bg-[#94a3b8] animate-bounce"
-                        style={{ animationDelay: "0.15s" }}
+                    </motion.div>
+                    <div className="bg-white rounded-2xl rounded-tl-md px-4 py-2.5 shadow-sm border border-[#eef3fa] flex items-center gap-2 relative overflow-hidden">
+                      {/* Shimmer sweep */}
+                      <motion.span
+                        aria-hidden
+                        initial={{ x: "-100%" }}
+                        animate={{ x: "200%" }}
+                        transition={{
+                          duration: 1.8,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                        className="absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-[#dbeafe]/60 to-transparent"
                       />
-                      <span
-                        className="w-1.5 h-1.5 rounded-full bg-[#94a3b8] animate-bounce"
-                        style={{ animationDelay: "0.3s" }}
-                      />
+                      <span className="relative flex items-center gap-1">
+                        <motion.span
+                          animate={{ y: [0, -3, 0] }}
+                          transition={{
+                            duration: 0.9,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }}
+                          className="w-1.5 h-1.5 rounded-full bg-[#185FA5]"
+                        />
+                        <motion.span
+                          animate={{ y: [0, -3, 0] }}
+                          transition={{
+                            duration: 0.9,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            delay: 0.15,
+                          }}
+                          className="w-1.5 h-1.5 rounded-full bg-[#185FA5]"
+                        />
+                        <motion.span
+                          animate={{ y: [0, -3, 0] }}
+                          transition={{
+                            duration: 0.9,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            delay: 0.3,
+                          }}
+                          className="w-1.5 h-1.5 rounded-full bg-[#185FA5]"
+                        />
+                      </span>
+                      <span className="relative text-[11.5px] font-medium text-[#64748b]">
+                        Mengetik
+                        <motion.span
+                          animate={{ opacity: [0, 1, 1, 0] }}
+                          transition={{
+                            duration: 1.2,
+                            repeat: Infinity,
+                            times: [0, 0.33, 0.66, 1],
+                          }}>
+                          ...
+                        </motion.span>
+                      </span>
                     </div>
                   </motion.div>
                 )}
