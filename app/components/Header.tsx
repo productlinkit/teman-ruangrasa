@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import Link from "next/link";
 import Logo from "./icons/Logo";
 
 const navLinks = [
@@ -40,7 +41,12 @@ export default function Header() {
               : "bg-[#eef2f7]/90 shadow-[0_4px_20px_-8px_rgba(15,23,42,0.08)] border border-white/60"
           }`}>
           <div className="flex items-center justify-between px-5 sm:px-7 lg:px-8 h-[60px] sm:h-[68px]">
-            <Logo />
+            <Link
+              href="/"
+              aria-label="Buka chat RuangRasa Teman"
+              className="inline-flex">
+              <Logo />
+            </Link>
 
             <ul className="hidden md:flex items-center gap-7 lg:gap-10">
               {navLinks.map((link) => (
@@ -56,13 +62,16 @@ export default function Header() {
             </ul>
 
             <div className="flex items-center gap-2">
-              <motion.a
+              <motion.div
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
-                href="#waitlist"
-                className="hidden sm:inline-flex items-center justify-center rounded-full bg-[#185FA5] px-5 lg:px-6 py-2.5 text-[13.5px] font-semibold text-white shadow-md shadow-blue-900/15 hover:bg-[#0F4478] transition-colors">
-                Gabung Sekarang
-              </motion.a>
+                className="hidden sm:inline-flex">
+                <Link
+                  href="/"
+                  className="inline-flex items-center justify-center rounded-full bg-[#185FA5] px-5 lg:px-6 py-2.5 text-[13.5px] font-semibold text-white shadow-md shadow-blue-900/15 hover:bg-[#0F4478] transition-colors">
+                  Gabung Sekarang
+                </Link>
+              </motion.div>
 
               <button
                 onClick={() => setOpen((v) => !v)}
@@ -91,12 +100,12 @@ export default function Header() {
                       {link.label}
                     </a>
                   ))}
-                  <a
-                    href="#waitlist"
+                  <Link
+                    href="/"
                     onClick={() => setOpen(false)}
                     className="sm:hidden mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#185FA5] px-5 py-3 text-[13.5px] font-semibold text-white">
                     Gabung Sekarang
-                  </a>
+                  </Link>
                 </div>
               </motion.div>
             )}

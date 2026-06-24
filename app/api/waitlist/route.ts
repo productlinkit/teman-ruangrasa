@@ -12,8 +12,15 @@ export async function POST(req: NextRequest) {
     const { name, phone, source, summary } =
       (await req.json()) as WaitlistPayload;
 
-    // Validasi input
-    if (!name?.trim() || !phone?.trim()) {
+    const trimmedName = name?.trim() ?? "";
+    const trimmedPhone = phone?.trim() ?? "";
+    const trimmedSummary = summary?.trim() ?? "";
+    const hasContact = !!trimmedName && !!trimmedPhone;
+    const hasSummary = !!trimmedSummary;
+
+    // Boleh salah satu: lead lengkap (nama+wa) ATAU jejak chat (summary)
+    // — supaya event abandoned tetap bisa di-capture tanpa kontak.
+    if (!hasContact && !hasSummary) {
       return NextResponse.json(
         { error: "Nama dan nomor WhatsApp wajib diisi" },
         { status: 400 }
@@ -33,9 +40,9 @@ export async function POST(req: NextRequest) {
     const payload = {
       secret: process.env.WEBHOOK_SECRET,
       sheetName: "teman",
-      fullName: name.trim(),
-      whatsapp: phone.trim(),
-      summary: summary?.trim() || "",
+      fullName: trimmedName,
+      whatsapp: trimmedPhone,
+      summary: trimmedSummary,
       source: `teman.ruangrasa (${sourceLabel})`,
       userAgent: req.headers.get("user-agent") || "",
     };

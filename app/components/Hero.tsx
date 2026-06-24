@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import gsap from "gsap";
 
 const heroUsers = [
@@ -219,17 +220,17 @@ export default function Hero() {
                   ))}
                 </div>
 
-                {/* CTA Button */}
-                <motion.button
-                  type="button"
+                {/* CTA Button → arahkan ke halaman chat */}
+                <motion.div
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() =>
-                    window.dispatchEvent(new Event("ruangrasa:open-chat"))
-                  }
-                  className="mt-4 sm:mt-5 w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#185FA5] px-4 sm:px-6 py-3 sm:py-3.5 text-[13px] sm:text-[13.5px] font-bold text-white shadow-lg hover:bg-[#0F4478] transition-colors">
-                  Coba Sekarang, Gratis
-                </motion.button>
+                  className="mt-4 sm:mt-5">
+                  <Link
+                    href="/"
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#185FA5] px-4 sm:px-6 py-3 sm:py-3.5 text-[13px] sm:text-[13.5px] font-bold text-white shadow-lg hover:bg-[#0F4478] transition-colors">
+                    Coba Sekarang, Gratis
+                  </Link>
+                </motion.div>
               </div>
             </motion.div>
 
